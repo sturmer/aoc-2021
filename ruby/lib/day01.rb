@@ -31,8 +31,7 @@ class PartTwo
   def solve(fp)
     File.readlines(fp).each do |line|
       depth = Integer(line)
-      @prev_samples.push(depth)
-      @prev_samples.slice!(0)
+      @prev_samples = @prev_samples.push(depth).drop 1
 
       next if @prev_samples.include?(-1)
 
