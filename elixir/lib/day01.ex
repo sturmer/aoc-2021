@@ -47,14 +47,10 @@ defmodule Aoc2021.Day01 do
     else
       sum = Enum.sum(prev_samples)
 
-      if prev_sum == -1 do
-        find_tri_depth(tail, new_prev_samples, sum, count)
-      else
-        if sum > prev_sum do
-          find_tri_depth(tail, new_prev_samples, sum, count+1)
-        else
-          find_tri_depth(tail, new_prev_samples, sum, count)
-        end
+      cond do
+        prev_sum == -1 -> find_tri_depth(tail, new_prev_samples, sum, count)
+        sum > prev_sum -> find_tri_depth(tail, new_prev_samples, sum, count+1)
+        true -> find_tri_depth(tail, new_prev_samples, sum, count)
       end
     end
   end
