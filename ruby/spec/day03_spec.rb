@@ -1,10 +1,11 @@
-require_relative '../lib/day01'
+require_relative '../lib/day03'
 
-RSpec.describe 'Day 1' do
+RSpec.describe 'Day 3' do
   it 'solves the first part' do
-    expect(PartOne.new.solve('../input_files/input.day1.txt')).to eq(1532)
+    expect(Day3::Part1.solve).to eq(3549854)
   end
+
   it 'solves the second part' do
-    expect(PartTwo.new.solve('../input_files/input.day1.txt')).to eq(1571)
+    expect(Day3::Part2.solve).to eq(3765399)
   end
 end
