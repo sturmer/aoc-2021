@@ -4,23 +4,6 @@ module Day4
   FP = '../input_files/input.day4.txt'
   LINES = File.readlines(FP).map { |x| x.chomp!("\n") }
 
-  class MarkedNumber
-    attr_accessor :num, :marked
-
-    def initialize(num, marked = false)
-      @num = num
-      @marked = marked
-    end
-
-    def to_s
-      "(#{@num} #{@marked})"
-    end
-
-    def ==(other)
-      @num == other.num && @marked == other.marked
-    end
-  end
-
   def self.parse_input
     seq_init = false
     rows = []
@@ -39,7 +22,7 @@ module Day4
         next
       end
 
-      row = l.split(' ').map { |x| MarkedNumber.new(x) }
+      row = l.split(' ').map { |x| { num: x, marked: false } }
       rows.append(row)
 
       if rows.length == 5
@@ -56,8 +39,8 @@ module Day4
   def self.compute_score(board)
     score = 0
     board.each do |el|
-      unless el.marked
-        score += Integer(el.num)
+      unless el[:marked]
+        score += Integer(el[:num])
       end
     end
 
@@ -65,7 +48,7 @@ module Day4
   end
 
   def Day4.winning_line?(row_or_column)
-    row_or_column.all? { |element| element.marked == true }
+    row_or_column.all? { |element| element[:marked] == true }
   end
 
   module Part1
@@ -74,8 +57,8 @@ module Day4
 
       seq.each do |extracted_num|
         boards.each do |board|
-          while index = board.find_index(MarkedNumber.new(extracted_num))
-            board[*index].marked = true
+          while index = board.find_index({num: extracted_num, marked: false})
+            board[*index][:marked] = true
           end
         end
 
@@ -106,8 +89,8 @@ module Day4
 
           board = annotated_board[:board]
 
-          while index = board.find_index(MarkedNumber.new(extracted_num))
-            board[*index].marked = true
+          while index = board.find_index({ num: extracted_num, marked: false })
+            board[*index][:marked] = true
           end
         end
 
