@@ -1,8 +1,11 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    algorithms (1.0.0)
     coderay (1.1.1)
     diff-lcs (1.4.4)
+    generator (0.0.1)
+    lazy_priority_queue (0.1.1)
     matrix (0.4.2)
     method_source (1.0.0)
     pry (0.13.1)
@@ -11,6 +14,9 @@ GEM
     pry-doc (1.2.0)
       pry (~> 0.11)
       yard (~> 0.9.11)
+    rgl (0.5.7)
+      lazy_priority_queue (~> 0.1.0)
+      stream (~> 0.5.3)
     rspec (3.6.0)
       rspec-core (~> 3.6.0)
       rspec-expectations (~> 3.6.0)
@@ -24,6 +30,8 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.6.0)
     rspec-support (3.6.0)
+    stream (0.5.3)
+      generator
     webrick (1.7.0)
     yard (0.9.27)
       webrick (~> 1.7.0)
@@ -33,10 +41,12 @@ PLATFORMS
   x86_64-darwin-20
 
 DEPENDENCIES
+  algorithms
   coderay (= 1.1.1)
   matrix
   pry (~> 0.13.1)
   pry-doc
+  rgl
   rspec (= 3.6.0)
 
 BUNDLED WITH
