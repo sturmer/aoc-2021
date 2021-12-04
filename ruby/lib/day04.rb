@@ -64,40 +64,33 @@ module Day4
     score
   end
 
+  def Day4.winning_line?(row_or_column)
+    row_or_column.all? { |element| element.marked == true }
+  end
+
   module Part1
     def Part1.solve
       seq, boards = Day4.parse_input
 
-      seq.each do |s|
-        boards.each do |b|
-          i = b.find_index(MarkedNumber.new(s, false))
-          while i != nil
-            b[*i].marked = true
-            i = b.find_index(MarkedNumber.new(s, false))
+      seq.each do |extracted_num|
+        boards.each do |board|
+          while index = board.find_index(MarkedNumber.new(extracted_num, false))
+            board[*index].marked = true
           end
         end
 
         # Check if we have winners:
-        boards.each do |b|
-          b.row_vectors.each do |rv|
-            if Part1.winning_line?(rv)
-              score = Day4.compute_score(b)
-              return Integer(s) * score
-            end
-          end
-
-          b.column_vectors.each do |cv|
-            if Part1.winning_line?(cv)
-              score = Day4.compute_score(b)
-              return Integer(s) * score
+        boards.each do |board|
+          [:row_vectors, :column_vectors].each do |as_vectors_method|
+            board.send(as_vectors_method).each do |vector|
+              if Day4.winning_line?(vector)
+                score = Day4.compute_score(board)
+                return Integer(extracted_num) * score
+              end
             end
           end
         end
       end
-    end
-
-    def Part1.winning_line?(row_or_column)
-      row_or_column.all? { |x| x.marked == true }
     end
   end
 
@@ -105,45 +98,33 @@ module Day4
     def Part2.solve
       seq, boards = Day4.parse_input
 
-      marked_boards = boards.map { |b| { board: b, winner: false } }
+      annotated_boards = boards.map { |b| { board: b, winner: false } }
 
-      seq.each do |s|
-        marked_boards.each do |mb|
-          next if mb[:winner]
+      seq.each do |extracted_num|
+        annotated_boards.each do |annotated_board|
+          next if annotated_board[:winner]
 
-          b = mb[:board]
+          board = annotated_board[:board]
 
-          i = b.find_index(MarkedNumber.new(s, false))
-          while i != nil
-            b[*i].marked = true
-            i = b.find_index(MarkedNumber.new(s, false))
+          while index = board.find_index(MarkedNumber.new(extracted_num, false))
+            board[*index].marked = true
           end
         end
 
         # Check if we have winners:
-        marked_boards.each do |mb|
-          b = mb[:board]
+        annotated_boards.each do |annotated_board|
+          board = annotated_board[:board]
 
-          b.row_vectors.each do |rv|
-            if rv.all? { |x| x.marked == true }
-              mb[:winner] = true
+          [:row_vectors, :column_vectors].each do |as_vectors_method|
+            board.send(as_vectors_method).each do |vector|
+              if Day4.winning_line?(vector)
+                annotated_board[:winner] = true
 
-              if marked_boards.all? { |mb| mb[:winner] == true }
-                # this was the last to win
-                score = Day4.compute_score(b)
-                return Integer(s) * score
-              end
-            end
-          end
-
-          b.column_vectors.each do |cv|
-            if cv.all? { |x| x.marked == true }
-              mb[:winner] = true
-
-              if marked_boards.all? { |mb| mb[:winner] == true }
-                # this was the last to win
-                score = Day4.compute_score(b)
-                return Integer(s) * score
+                if annotated_boards.all? { |mb| mb[:winner] == true }
+                  # this was the last to win
+                  score = Day4.compute_score(board)
+                  return Integer(extracted_num) * score
+                end
               end
             end
           end
