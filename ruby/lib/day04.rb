@@ -12,9 +12,7 @@ module Day4
     boards = []
 
     LINES.each do |l|
-      if l.empty? && rows.length != 5
-        next
-      end
+      next if l.empty? && rows.length != 5
 
       unless seq_init
         seq = l.split(',')
@@ -47,12 +45,12 @@ module Day4
     score
   end
 
-  def Day4.winning_line?(row_or_column)
+  def self.winning_line?(row_or_column)
     row_or_column.all? { |element| element[:marked] == true }
   end
 
   module Part1
-    def Part1.solve
+    def self.solve
       seq, boards = Day4.parse_input
 
       seq.each do |extracted_num|
@@ -78,7 +76,7 @@ module Day4
   end
 
   module Part2
-    def Part2.solve
+    def self.solve
       seq, boards = Day4.parse_input
 
       annotated_boards = boards.map { |b| { board: b, winner: false } }
