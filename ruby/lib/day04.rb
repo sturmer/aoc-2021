@@ -74,7 +74,7 @@ module Day4
 
       seq.each do |extracted_num|
         boards.each do |board|
-          while index = board.find_index(MarkedNumber.new(extracted_num, false))
+          while index = board.find_index(MarkedNumber.new(extracted_num))
             board[*index].marked = true
           end
         end
@@ -106,7 +106,7 @@ module Day4
 
           board = annotated_board[:board]
 
-          while index = board.find_index(MarkedNumber.new(extracted_num, false))
+          while index = board.find_index(MarkedNumber.new(extracted_num))
             board[*index].marked = true
           end
         end
