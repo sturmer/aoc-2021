@@ -1,11 +1,12 @@
 require 'matrix'
 
-module Day3
+module Day4
   # FP = '../input_files/test.day4.txt'
   FP = '../input_files/input.day4.txt'
   LINES = File.readlines(FP).map { |x| x.chomp!("\n") }
 
-  class Mark
+
+  class MarkedNumber
     attr_accessor :num, :marked
 
     def initialize(num, marked = false)
@@ -22,122 +23,85 @@ module Day3
     end
   end
 
-  # module Part1
-  #   def Part1.solve
-  #     seq_init = false
-  #     seq = []
-  #     rows = []
-  #     boards = []
-  #
-  #     # Build seq and boards
-  #     LINES.each do |l|
-  #       if l.empty? && rows.length != 5
-  #         next
-  #       end
-  #
-  #       unless seq_init
-  #         seq = l.split(',')
-  #         seq_init = true
-  #
-  #         # puts "seq: #{seq}"
-  #         next
-  #       end
-  #
-  #       # puts "adding row #{l}"
-  #       row = l.split(' ').map { |x| Mark.new(x) }
-  #       rows.append(row)
-  #
-  #       if rows.length == 5
-  #         board = Matrix[*rows]
-  #         boards.append(board)
-  #         # puts "board: #{board}, top-right: #{board[0, -1]}"
-  #
-  #         rows = []
-  #       end
-  #     end
-  #
-  #     seq.each do |s|
-  #       boards.each do |b|
-  #         i = b.find_index(Mark.new(s, false))
-  #         while i != nil
-  #           b[*i].marked = true
-  #           i = b.find_index(Mark.new(s, false))
-  #         end
-  #       end
-  #
-  #       # Check if we have winners:
-  #       boards.each do |b|
-  #         b.row_vectors.each do |rv|
-  #           if rv.all? { |x| x.marked == true}
-  #             score = compute_score(b)
-  #             res = Integer(s) * score
-  #
-  #             puts "res is #{res}"
-  #             return res
-  #           end
-  #         end
-  #
-  #         b.column_vectors.each do |cv|
-  #           if cv.all? { |x| x.marked == true}
-  #             puts "board is a winner"
-  #             score = compute_score(b)
-  #             res = Integer(s) * score
-  #
-  #             puts "res is #{res}"
-  #             return res
-  #           end
-  #         end
-  #       end
-  #     end
-  #
-  #     # puts "\nMarked boards #{boards}"
-  #   end
-  #
-  #   def Part1.compute_score(board)
-  #     score = 0
-  #     board.each do |el|
-  #       unless el.marked
-  #         score += Integer(el.num)
-  #       end
-  #     end
-  #
-  #     score
-  #   end
-  # end
+  def self.parse_input
+    seq_init = false
+    rows = []
+
+    seq = []
+    boards = []
+
+    LINES.each do |l|
+      if l.empty? && rows.length != 5
+        next
+      end
+
+      unless seq_init
+        seq = l.split(',')
+        seq_init = true
+        next
+      end
+
+      row = l.split(' ').map { |x| MarkedNumber.new(x) }
+      rows.append(row)
+
+      if rows.length == 5
+        board = Matrix[*rows]
+        boards.append(board)
+
+        rows = []
+      end
+    end
+
+    [seq, boards]
+  end
+
+  module Part1
+    def Part1.solve
+      seq, boards = Day4.parse_input
+
+      seq.each do |s|
+        boards.each do |b|
+          i = b.find_index(MarkedNumber.new(s, false))
+          while i != nil
+            b[*i].marked = true
+            i = b.find_index(MarkedNumber.new(s, false))
+          end
+        end
+
+        # Check if we have winners:
+        boards.each do |b|
+          b.row_vectors.each do |rv|
+            if rv.all? { |x| x.marked == true }
+              score = compute_score(b)
+              return Integer(s) * score
+            end
+          end
+
+          b.column_vectors.each do |cv|
+            if cv.all? { |x| x.marked == true }
+              score = compute_score(b)
+              return Integer(s) * score
+            end
+          end
+        end
+      end
+    end
+
+    def Part1.compute_score(board)
+      score = 0
+      board.each do |el|
+        unless el.marked
+          score += Integer(el.num)
+        end
+      end
+
+      score
+    end
+  end
 
   module Part2
     def Part2.solve
-      seq_init = false
-      seq = []
-      rows = []
-      boards = []
-
-      # Build seq and boards
-      LINES.each do |l|
-        if l.empty? && rows.length != 5
-          next
-        end
-
-        unless seq_init
-          seq = l.split(',')
-          seq_init = true
-
-          # puts "seq: #{seq}"
-          next
-        end
-
-        # puts "adding row #{l}"
-        row = l.split(' ').map { |x| Mark.new(x) }
-        rows.append(row)
-
-        if rows.length == 5
-          board = Matrix[*rows]
-          boards.append(board)
-          # puts "board: #{board}, top-right: #{board[0, -1]}"
-
-          rows = []
-        end
-      end
+      seq, boards = Day4.parse_input
 
       marked_boards = boards.map { |b| { board: b, winner: false } }
 
@@ -147,10 +111,10 @@ module Day3
 
           b = mb[:board]
 
-          i = b.find_index(Mark.new(s, false))
+          i = b.find_index(MarkedNumber.new(s, false))
           while i != nil
             b[*i].marked = true
-            i = b.find_index(Mark.new(s, false))
+            i = b.find_index(MarkedNumber.new(s, false))
           end
         end
 
@@ -160,32 +124,24 @@ module Day3
 
           b.row_vectors.each do |rv|
             if rv.all? { |x| x.marked == true }
-              puts "board is a winner"
               mb[:winner] = true
 
               if marked_boards.all? { |mb| mb[:winner] == true }
                 # this was the last to win
                 score = compute_score(b)
-                res = Integer(s) * score
-
-                puts "res is #{res}"
-                return res
+                return Integer(s) * score
               end
             end
           end
 
           b.column_vectors.each do |cv|
             if cv.all? { |x| x.marked == true }
-              puts "board is a winner"
               mb[:winner] = true
 
               if marked_boards.all? { |mb| mb[:winner] == true }
                 # this was the last to win
                 score = compute_score(b)
-                res = Integer(s) * score
-
-                puts "res is #{res}"
-                return res
+                return Integer(s) * score
               end
             end
           end
@@ -206,4 +162,4 @@ module Day3
   end
 end
 
-Day3::Part2.solve
+Day4::Part2.solve
