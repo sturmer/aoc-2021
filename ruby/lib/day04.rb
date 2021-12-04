@@ -1,10 +1,8 @@
 require 'matrix'
 
 module Day4
-  # FP = '../input_files/test.day4.txt'
   FP = '../input_files/input.day4.txt'
   LINES = File.readlines(FP).map { |x| x.chomp!("\n") }
-
 
   class MarkedNumber
     attr_accessor :num, :marked
@@ -55,6 +53,17 @@ module Day4
     [seq, boards]
   end
 
+  def self.compute_score(board)
+    score = 0
+    board.each do |el|
+      unless el.marked
+        score += Integer(el.num)
+      end
+    end
+
+    score
+  end
+
   module Part1
     def Part1.solve
       seq, boards = Day4.parse_input
@@ -71,15 +80,15 @@ module Day4
         # Check if we have winners:
         boards.each do |b|
           b.row_vectors.each do |rv|
-            if rv.all? { |x| x.marked == true }
-              score = compute_score(b)
+            if Part1.winning_line?(rv)
+              score = Day4.compute_score(b)
               return Integer(s) * score
             end
           end
 
           b.column_vectors.each do |cv|
-            if cv.all? { |x| x.marked == true }
-              score = compute_score(b)
+            if Part1.winning_line?(cv)
+              score = Day4.compute_score(b)
               return Integer(s) * score
             end
           end
@@ -87,15 +96,8 @@ module Day4
       end
     end
 
-    def Part1.compute_score(board)
-      score = 0
-      board.each do |el|
-        unless el.marked
-          score += Integer(el.num)
-        end
-      end
-
-      score
+    def Part1.winning_line?(row_or_column)
+      row_or_column.all? { |x| x.marked == true }
     end
   end
 
@@ -128,7 +130,7 @@ module Day4
 
               if marked_boards.all? { |mb| mb[:winner] == true }
                 # this was the last to win
-                score = compute_score(b)
+                score = Day4.compute_score(b)
                 return Integer(s) * score
               end
             end
@@ -140,7 +142,7 @@ module Day4
 
               if marked_boards.all? { |mb| mb[:winner] == true }
                 # this was the last to win
-                score = compute_score(b)
+                score = Day4.compute_score(b)
                 return Integer(s) * score
               end
             end
@@ -148,18 +150,5 @@ module Day4
         end
       end
     end
-
-    def Part2.compute_score(board)
-      score = 0
-      board.each do |el|
-        unless el.marked
-          score += Integer(el.num)
-        end
-      end
-
-      score
-    end
   end
 end
-
-Day4::Part2.solve
