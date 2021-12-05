@@ -19,20 +19,13 @@ module Day5
   end
 
   def self.build_matrix(coords)
-    # FIXME(gianluca.ciccarelli): so inefficient
-    ascissas = []
-    ordinates = []
-    coords.map do |c|
-      x1, y1, x2, y2 = c
-      ascissas << x1 << x2
-      ordinates << y1 << y2
+    max_x = max_y = 0
+    coords.map do |x1, y1, x2, y2|
+      max_x = [max_x, [x1, x2].max].max
+      max_y = [max_y, [y1, y2].max].max
     end
-    max_x = ascissas.max
-    max_y = ordinates.max
 
-    rows = max_x + 1
-    cols = max_y + 1
-    Matrix.zero(rows, cols)
+    Matrix.zero(max_x + 1, max_y + 1)
   end
 
   module Part1
@@ -40,26 +33,24 @@ module Day5
       all_endpoints = Day5.parse_input
       chart = Day5.build_matrix all_endpoints
 
-      all_endpoints.each do |endpoint|
-        x1, y1, x2, y2 = endpoint
-
+      all_endpoints.each do |x1, y1, x2, y2|
         next if x1 != x2 && y1 != y2
 
-        range = if x1 == x2
-                  Day5.points_in_segment(y1, y2).map { |y| [x1, y] }
-                else
-                  Day5.points_in_segment(x1, x2).map { |x| [x, y1] }
-                end
-
-        range.each { |coords| chart[*coords] += 1 }
+        if x1 == x2
+          Day5.points_in_segment(y1, y2).map { |y| [x1, y] }
+        else
+          Day5.points_in_segment(x1, x2).map { |x| [x, y1] }
+        end
+          .each { |coords| chart[*coords] += 1 }
       end
 
-      count = 0
-      chart.each do |u|
-        count += 1 if u >= 2
+      chart.reduce do |cnt, u|
+        if u >= 2
+          cnt + 1
+        else
+          cnt
+        end
       end
-
-      count
     end
   end
 
@@ -94,20 +85,18 @@ module Day5
       all_endpoints = Day5.parse_input
       chart = Day5.build_matrix all_endpoints
 
-      all_endpoints.each do |endpoint|
-        x1, y1, x2, y2 = endpoint
-
-        range = Day5::Part2.points_in_segment(x1, y1, x2, y2)
-
-        range.each { |coords| chart[*coords] += 1 }
+      all_endpoints.each do |x1, y1, x2, y2|
+        Day5::Part2.points_in_segment(x1, y1, x2, y2)
+          .each { |coords| chart[*coords] += 1 }
       end
 
-      count = 0
-      chart.each do |u|
-        count += 1 if u >= 2
+      chart.reduce do |cnt, u|
+        if u >= 2
+          cnt + 1
+        else
+          cnt
+        end
       end
-
-      count
     end
   end
 end
