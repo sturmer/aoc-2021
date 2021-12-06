@@ -1,5 +1,4 @@
 require_relative '../lib/day04'
-include Day4
 
 RSpec.describe 'Day 4' do
   it 'can compute a board score' do
@@ -12,10 +11,10 @@ RSpec.describe 'Day 4' do
   end
 
   it 'solves the first part' do
-    expect(Part1.solve).to eq(8580)
+    expect(Day4::Part1.solve).to eq(8580)
   end
 
   it 'solves the second part' do
-    expect(Part2.solve).to eq(9576)
+    expect(Day4::Part2.solve).to eq(9576)
   end
 end
