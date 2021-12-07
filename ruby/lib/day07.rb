@@ -1,3 +1,5 @@
+require 'matrix'
+
 module Day6
   # FP = '../input_files/test.day6.txt'
   FP = '../input_files/input.day6.txt'
