@@ -1,12 +1,11 @@
-require_relative '../lib/day06'
-include Day6
+require_relative '../lib/day07'
 
-RSpec.describe 'Day 6' do
+RSpec.describe 'Day 7' do
   it 'solves the first part' do
-    expect(Part1.solve).to eq(379414)
+    expect(Day7::Part1.solve).to eq('PASTE ANS')
   end
 
   it 'solves the second part' do
-    expect(Part2.solve).to eq(1705008653296)
+    expect(Day7::Part2.solve).to eq('PASTE ANS')
   end
 end
