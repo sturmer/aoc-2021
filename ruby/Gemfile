@@ -8,4 +8,4 @@ gem "matrix"
 gem "rgl"
 gem "algorithms"
 gem "rubocop"
-gem "ruby-geometry"
+gem 'perfect-shape'

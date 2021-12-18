@@ -1,27 +1,20 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (7.0.0)
-      concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 1.6, < 2)
-      minitest (>= 5.1)
-      tzinfo (~> 2.0)
     algorithms (1.0.0)
     ast (2.4.2)
     coderay (1.1.1)
-    concurrent-ruby (1.1.9)
     diff-lcs (1.4.4)
+    equalizer (0.0.11)
     generator (0.0.1)
-    i18n (1.8.11)
-      concurrent-ruby (~> 1.0)
     lazy_priority_queue (0.1.1)
     matrix (0.4.2)
-    memoist (0.16.2)
     method_source (1.0.0)
-    minitest (5.15.0)
     parallel (1.21.0)
     parser (3.0.3.2)
       ast (~> 2.4.1)
+    perfect-shape (0.0.7)
+      equalizer (= 0.0.11)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -58,14 +51,9 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.14.0)
       parser (>= 3.0.1.1)
-    ruby-geometry (0.0.6)
-      activesupport
-      memoist
     ruby-progressbar (1.11.0)
     stream (0.5.3)
       generator
-    tzinfo (2.0.4)
-      concurrent-ruby (~> 1.0)
     unicode-display_width (2.1.0)
     webrick (1.7.0)
     yard (0.9.27)
@@ -79,12 +67,12 @@ DEPENDENCIES
   algorithms
   coderay (= 1.1.1)
   matrix
+  perfect-shape
   pry (~> 0.13.1)
   pry-doc
   rgl
   rspec (= 3.6.0)
   rubocop
-  ruby-geometry
 
 BUNDLED WITH
    2.2.30
