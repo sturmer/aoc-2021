@@ -27,17 +27,20 @@ module Day19
       #   [-4, 5, 6]
       #   [-4, 6, 5]
       # The sign can change in 8 ways (2**3):
-      #   [5, 6, -4]
-      #   [5, -6, -4]
-      #   [-5, -6, -4]
-      #   [-5, -6, 4]
-      #   [-5, 6, 4]
-      #   [5, 6, 4]
-      #   [5, -6, 4]
-      #   [-5, 6, -4]
+      #  1. [5, 6, -4]
+      #  2. [5, -6, -4]
+      #  3. [-5, -6, -4]
+      #  4. [-5, -6, 4]
+      #  5. [-5, 6, 4]
+      #  6. [5, 6, 4]
+      #  7. [5, -6, 4]
+      #  8. [-5, 6, -4]
       # ???
       #
       # Once I face a direction, I can rotate in multiple of 90 deg only in 4 ways.
+      #
+      # Update: found rotation matrices (don't seem to really help- https://stackoverflow.com/questions/14607640/rotating-a-vector-in-3d-space#14609567)
+      # and even started reading about Quaternions (!)
     end
 
     def solve
