@@ -1,5 +1,29 @@
 require 'matrix'
 
+class Point
+  attr_accessor :x, :y, :z
+
+  def self.[](x, y, z)
+    Point.new(x, y, z)
+  end
+
+  def ==(p)
+    @x == p.x && @y == p.y && @z == p.z
+  end
+
+  def to_s
+    "(#{@x}, #{@y}, #{@z})"
+  end
+
+  private
+
+  def initialize(x, y, z)
+    @x = x
+    @y = y
+    @z = z
+  end
+end
+
 module Day19
   FILE_PATH = '../input_files/test.day19.txt'
   # FILE_PATH = '../input_files/input.day19.txt'
@@ -11,44 +35,90 @@ module Day19
   end
 
   class Part1
-    attr_accessor :attr1
 
-    def initialize
-      @attr1 = 0
-    end
-
-    def rotate_point(v)
-      # It's half of the permutations of components and sign change, but which half?
-      # [26] pry(main)> [5, 6, -4].permutation(3) {|p| p p}
-      #   [5, 6, -4]
-      #   [5, -4, 6]
-      #   [6, 5, -4]
-      #   [6, -4, 5]
-      #   [-4, 5, 6]
-      #   [-4, 6, 5]
-      # The sign can change in 8 ways (2**3):
-      #  1. [5, 6, -4]
-      #  2. [5, -6, -4]
-      #  3. [-5, -6, -4]
-      #  4. [-5, -6, 4]
-      #  5. [-5, 6, 4]
-      #  6. [5, 6, 4]
-      #  7. [5, -6, 4]
-      #  8. [-5, 6, -4]
-      # ???
-      #
-      # Once I face a direction, I can rotate in multiple of 90 deg only in 4 ways.
-      #
-      # Update: found rotation matrices (don't seem to really help- https://stackoverflow.com/questions/14607640/rotating-a-vector-in-3d-space#14609567)
-      # and even started reading about Quaternions (!)
+    # p: Point
+    def rotate_point(p)
+      rotate_around_z(p) +
+        rotate_around_y(p) +
+        rotate_around_x(p)
     end
 
     def solve
 
     end
 
-  end
+    private
 
+    def rotate_around_x(p)
+      x_rotations = []
+
+      # Z axis "front/back"
+      # [y, z, x]
+      x_rotations << Point[p.y, p.z, p.x]
+      x_rotations << Point[p.y, -p.z, p.x]
+
+      # [-z, y, x]
+      x_rotations << Point[-p.z, p.y, p.x]
+      x_rotations << Point[p.z, p.y, p.x]
+
+      # [-y, -z, x]
+      x_rotations << Point[-p.y, -p.z, p.x]
+      x_rotations << Point[-p.y, p.z, p.x]
+
+      # [z, -y, -x]
+      x_rotations << Point[-p.z, -p.y, p.x]
+      x_rotations << Point[p.z, -p.y, p.x]
+
+      x_rotations
+    end
+
+    def rotate_around_z(p)
+      z_rotations = []
+
+      # Z axis "up/down"
+      # [x, y, z]
+      z_rotations << p
+      z_rotations << Point[p.x, p.y, -p.z]
+
+      # [-y, x, z]
+      z_rotations << Point[-p.y, p.x, p.z]
+      z_rotations << Point[-p.y, p.x, -p.z]
+
+      # [-x, -y, z]
+      z_rotations << Point[-p.x, -p.y, p.z]
+      z_rotations << Point[-p.x, -p.y, -p.z]
+
+      # [y, -x, z]
+      z_rotations << Point[p.y, -p.x, p.z]
+      z_rotations << Point[p.y, -p.x, -p.z]
+
+      z_rotations
+    end
+
+    def rotate_around_y(p)
+      y_rotations = []
+
+      # Z axis "right/left"
+      # [z, x, y]
+      y_rotations << Point[p.z, p.x, p.y]
+      y_rotations << Point[-p.z, p.x, p.y]
+
+      # [-x, z, y]
+      y_rotations << Point[-p.x, p.z, p.y]
+      y_rotations << Point[-p.x, -p.z, p.y]
+
+      # [-z, -x, y]
+      y_rotations << Point[-p.z, -p.x, p.y]
+      y_rotations << Point[p.z, -p.x, p.y]
+
+      # [x, -z, y]
+      y_rotations << Point[p.x, -p.z, p.y]
+      y_rotations << Point[p.x, p.z, p.y]
+
+      y_rotations
+    end
+
+  end
 
 end
 
